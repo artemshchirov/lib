@@ -1,6 +1,4 @@
-# ЗАМЕТКИ
 # Звук
-# Разные боты
 import random
 from random import randint
 from tkinter import *
@@ -23,6 +21,9 @@ def play():
     leftButton['state'] = DISABLED
     playButton['state'] = NORMAL
     rightButton['state'] = DISABLED
+    # xCombobox['state'] = DISABLED
+    # oCombobox['state'] = DISABLED
+    # endCombobox['state'] = DISABLED
 
     playGame = True
     pauseMoves = False
@@ -59,6 +60,20 @@ def leftButton():
 
     rightButton['state'] = NORMAL
     playButton['state'] = NORMAL
+def comboStyle():
+    combostyle = ttk.Style()
+    combostyle.theme_create('combostyle', parent='alt',
+                             settings = {'TCombobox':
+                                         {'configure':
+                                          {'selectbackground': 'white',
+                                           'selectforeground': 'black',
+                                           'fieldbackground': 'white',
+                                           'background': 'white'
+                                           }}}
+                             )
+    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+    # ('combostyle', 'winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
+    combostyle.theme_use('combostyle')
 def reset():
     '''
     Сбрасывает поле в cостояние после запуска программы
@@ -91,21 +106,6 @@ def reset():
 
     refreshText()
     updatePictures()
-
-def comboStyle():
-    combostyle = ttk.Style()
-    combostyle.theme_create('combostyle', parent='alt',
-                             settings = {'TCombobox':
-                                         {'configure':
-                                          {'selectbackground': 'white',
-                                           'selectforeground': 'black',
-                                           'fieldbackground': 'white',
-                                           'background': 'white'
-                                           }}}
-                             )
-    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-    # ('combostyle', 'winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
-    combostyle.theme_use('combostyle')
 def refreshText():
     '''
     Обновляет текст меток статистики
@@ -135,7 +135,6 @@ def updatePictures():
 
     # Обновление экрана
     root.update()
-
 def isWinCheck():
     '''
     Проверка на победу. 1 - Х, 2 - О, 0 - Ничья
@@ -156,7 +155,6 @@ def isWinCheck():
         return 2
     elif (0 not in dataImage[0] and 0 not in dataImage[1] and 0 not in dataImage[2] ):
         return 0
-
 def startNewGame():
     '''
     Инициализация новой игры (цикла раундов)
@@ -189,92 +187,98 @@ def startNewRound():
     '''
     global playGame, figura, moveHuman
 
+    # Счетчик игр на кнопке Start
     startButton['text'] = f'Games: {sum(wins)}'
 
+    # Отключение паузы (если есть)
     pauseMoves = False
 
-    combo = gamers[xCombobox.current()][oCombobox.current()]
+    # Установка default математической модели
     for i in range(n):
         for j in range(m):
             dataImage[i][j] = 0
 
-    firstMove = randint(0, 1)
+    # Значения Comboboxes для определения кто с кем играет
+    combo = gamers[xCombobox.current()][oCombobox.current()]
+    # Если в игре Player 1,2 vs AI
     if (combo == 1 or combo == 3):
+        # Первый ход. 0 - Робот, 1 - Человек
+        firstMove = randint(0, 1)
         if (firstMove == 0):
             moveHuman = False
+            # Если игрок 1й (Тор) - человек, то 1й ход O
             if (xCombobox.current() == 0):
                 figura = 2
+                print(figura)
+            # Если игрок 2й (К.А.) - человек, то 1й ход X
             elif (oCombobox.current() == 0):
                 figura = 1
         else:
             moveHuman = True
+            # Если игрок 1й (Тор) - человек, то 1й ход X
             if (xCombobox.current() == 0):
                 figura = 1
+            # Если игрок 2й (К.А.) - человек, то 1й ход O
             elif (oCombobox.current() == 0):
                 figura = 2
-
+    # Если игра AI vs AI
     elif (combo == 4 and playGame):
+        playGame = True
         play()
 
-    if (figura == 1):
+    # Установка img соотвественно того, кто 1й ходит
+    if (figura == 1):   # X (Тор)
         labelsTop[0]['image'] = labelsTopImages[3]
         labelsTop[1]['image'] = labelsTopImages[4]
         labelsTop[2]['image'] = labelsTopImages[2]
-    elif (figura == 2):
+    elif (figura == 2): # O (К.А)
         labelsTop[0]['image'] = labelsTopImages[0]
         labelsTop[1]['image'] = labelsTopImages[4]
         labelsTop[2]['image'] = labelsTopImages[3]
 
     updatePictures()
-
 def go(x, y):
     '''
     Обрабатывание клика на поле игры
     '''
     global moveHuman
 
-    combo = gamers[xCombobox.current()][oCombobox.current()]
     if (playGame):
+        combo = gamers[xCombobox.current()][oCombobox.current()]
         # Player 1 vs Player 2
         if (combo == 0):
             if (dataImage[x][y] == 0):
                 move(x, y, figura)
         # Player 1,2 vs Random AI
         elif (combo == 1 or combo == 3):
-            if (moveHuman and dataImage[x][y] == 0):
-                moveHuman = False
-                move(x, y, figura)
-            if (not moveHuman):
-                moveHuman = True
-                moveAI()
+                if (moveHuman and dataImage[x][y] == 0):
+                    moveHuman = False
+                    move(x, y, figura)
+                if (not moveHuman):
+                    moveHuman = True
+                    moveAI()
     else:
         return 0
 def move(x, y, move):
     '''
     Ход, проверка хода и победы, инициализация последствий
     '''
-    global playGame, figura, win, wins, pauseMoves
+    global figura, playGame, wins, win, pauseMoves, firstMove
 
-    # Обновление математической модели принятой move(figura)
     if (dataImage[x][y] == 0):
         dataImage[x][y] = move
-        # Обновление графической модели в зависимости от математической
         labelImage[x][y]['image'] = imageFieldXO[dataImage[x][y]]
-        # Установка метки letsgo.png
         labelsTop[1]['image'] = labelsTopImages[4]
 
-        # Обновление знака следующего хода
-        if (figura == 1):   # Сейчас X
-            figura = 2      # Стало O
-        # Обновление меток картинок сверхй, чей текущий ход
-            labelsTop[0]['image'] = labelsTopImages[0]  # thor.png
-            labelsTop[2]['image'] = labelsTopImages[3]  # field2.png
-        elif (figura == 2): # Сейчас О
-            figura = 1      # Стало X
-            labelsTop[0]['image'] = labelsTopImages[3]  # field2.png
-            labelsTop[2]['image'] = labelsTopImages[2]  #captain.png
+        if (figura == 1):
+            labelsTop[0]['image'] = labelsTopImages[0]
+            labelsTop[2]['image'] = labelsTopImages[3]
+            figura = 2
+        elif (figura == 2):
+            labelsTop[0]['image'] = labelsTopImages[3]
+            labelsTop[2]['image'] = labelsTopImages[2]
+            figura = 1
 
-        # win - результат проверки на окончание игры
         win = isWinCheck()
         # X win check
         if (win == 1):
@@ -298,25 +302,30 @@ def move(x, y, move):
     refreshText()
     updatePictures()
 
-    # Если установлен режим "2 wins"
     if (endCombobox.current() == 0):
         if (wins[1] >= 2 or wins[2] >= 2):
-
+            playGame = False
             startButton['text'] = 'Start'
             playButton['text'] = '| >'
             startButton['state'] = NORMAL
             leftButton['state'] = NORMAL
             playButton['state'] = DISABLED
             rightButton['state'] = DISABLED
+            print('return  1')
+            # Надо для AI VS AI 2 wins
+            combo = gamers[xCombobox.current()][oCombobox.current()]
+            if (combo == 4 or combo == 1 or combo == 3):
+                pauseMoves = True
+                return 0
+            else:
+                pauseMoves = True
+                print('return  0')
+                return 0
 
-            playGame = False
-            pauseMoves = True
-            print('return  0')
-            return 0
-
+    # if (not pauseMoves):
     if (win == 0 or win == 1 or win == 2):
 
-        # print('Было. firstMove: ', firstMove, 'figura: ', figura)
+        print('Было. firstMove: ', firstMove, 'figura: ', figura)
         firstMove = randint(0, 1)
         if (firstMove == 0):
             figura = 1
@@ -325,42 +334,51 @@ def move(x, y, move):
         print('Стало. firstMove: ', firstMove, 'figura: ', figura)
 
         playGame = False
-        sleep(0.5)    # Пауза между раундоми
+        # sleep(0.5)    # Пауза между раундоми
         startNewRound()
         playGame = True
 def moveAI():
     '''
     Бот делающий ходы случайным образом
     '''
-    global playGame
+    global playGame, aiX, aiY
 
     if (endCombobox.current() == 0):
         if (wins[1] >= 2 or wins[2] >= 2):
             return 0
 
+    if (pauseMoves):
+        playGame = True
+
     if (playGame):
-        # Если Player 1,2 vs AI, то пауза:
+        playGame = False
+
+        # Кто против кого играет (зависит от значений Comboboxes)
         combo = gamers[xCombobox.current()][oCombobox.current()]
-        if (combo == 1 or combo == 3):
-            sleep(random.uniform(0, 1))
-        else:   # Иначе AI vs AI и пауза:
-            sleep(0.2)
 
-        # Генератор позиций для хода
-        aiX = randint(0, 2)
-        aiY = randint(0, 2)
-        # Проверка математической модели на свободное место
-        while (dataImage[aiX][aiY] != 0):
-            aiX = randint(0, 2)
-            aiY = randint(0, 2)
+        # Пауза перед ходом AI в зависимости от типа игры
+        if (combo == 1 or combo == 2 or combo == 3 or combo == 6):
+            sleep(random.uniform(0, 1))  # Время паузы бота перед ходом против игрока
+        else:
+            sleep(0.5)  # Время паузы бота перед ходом против бота
 
-        # AI делает ход
-        move(aiX, aiY, figura)
 
-        # Если не пауза
+        if (combo == 2 or combo == 6):
+            
+
+        # if (combo == 1 or combo == 3 or combo == 4 or combo == 5 or combo == 7):
+        #     print('Random AI move')
+        #     aiX = randint(0, 2)
+        #     aiY = randint(0, 2)
+        #     while (dataImage[aiX][aiY] != 0):
+        #         aiX = randint(0, 2)
+        #         aiY = randint(0, 2)
+
+            move(aiX, aiY, figura)
+
         if (not pauseMoves):
-            playGame = True # Игра продолжается
-        else:   # Если пауза
+            playGame = True
+        else:
             playGame = False
 
 # =============== START
@@ -398,10 +416,7 @@ endCombobox = ttk.Combobox(root, width=14, values=typeGames, state='readonly')
 xCombobox.place(x=10, y=584)
 oCombobox.place(x=10, y=614)
 endCombobox.place(x=10, y=644)
-xCombobo.bind("<<ComboboxSelected>>", refreshCombo)
-oCombobo.bind("<<ComboboxSelected>>", refreshCombo)
-endCombobo.bind("<<ComboboxSelected>>", refreshCombo)
-xCombobox.current(1)
+xCombobox.current(0)
 oCombobox.current(1)
 endCombobox.current(1)
 
@@ -471,7 +486,7 @@ labelsTopImages.append(PhotoImage(file='endgame/captain.png'))
 labelsTopImages.append(PhotoImage(file='endgame/win.png'))
 labelsTopImages.append(PhotoImage(file='endgame/thor.png'))
 labelsTopImages.append(PhotoImage(file='endgame/field2.png'))
-labelsTopImages.append(PhotoImage(file='endgame/letsgo.png'))  # letsgo
+labelsTopImages.append(PhotoImage(file='endgame/field2.png'))  # letsgo
 labelsTopImages.append(PhotoImage(file='endgame/start.png'))
 # Список с LabelTop и установка их
 labelsTop = []
@@ -504,11 +519,17 @@ for i in range(len(playersX)):
     gamers.append([])
     for j in range(len(playersO)):
         gamers[i].append(i * len(playersX) + j)
-
-# для Statistics labels
+print(gamers)
+playGame = True
+moveHuman = True
+pauseMoves = False
+firstMove = randint(0, 1)
+figura = randint(1, 2)
+# Statistics
 wins = [0, 0, 0]
 
 refreshText()
+
 # Style Comboboxes
 comboStyle()
 # =============== END

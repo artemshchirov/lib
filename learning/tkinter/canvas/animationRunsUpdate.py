@@ -95,7 +95,7 @@ def evilMove():
         vectorYl = -vectorYl
 
     # Теорема Пифагора. Если расстояние меньше
-    # диаметра круга, то значит есть касание
+    # диаметра круга то значит есть касание
     # TODO: Прописать маленькие кружки
     distanceS = (abs(xS - xP) ** 2 + abs(yS - yP) ** 2) ** 0.5
     distanceS1 = (abs(xS - xCircleHit1_12) ** 2 + abs(yS - yCircleHit1_12) ** 2) ** 0.5

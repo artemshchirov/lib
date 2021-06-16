@@ -5,7 +5,7 @@ from tkinter import *
 from tkinter import ttk         # Для RadioButton
 from tkinter import messagebox  # Для окон-сообщений
 import tkinter as tk
-from winsound import Beep       # Бипер (пищалка), генератор звука
+
 from time import sleep          # Для пауз
 
 def play():
@@ -364,7 +364,6 @@ def moveAI():
 
 
         if (combo == 2 or combo == 6):
-            
 
         # if (combo == 1 or combo == 3 or combo == 4 or combo == 5 or combo == 7):
         #     print('Random AI move')
@@ -385,7 +384,7 @@ def moveAI():
 root = Tk()
 root.resizable(False, False)
 root.title('Tic Tac Toe')
-root.iconbitmap('favicon/favicon.ico')
+# root.iconbitmap('favicon/favicon.ico')
 
 WIDTH = 473
 HEIGHT= 680

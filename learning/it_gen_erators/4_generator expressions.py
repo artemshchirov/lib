@@ -9,8 +9,8 @@ def get_number_from_range():
 counter = get_number_from_range()
 print(counter, '\n')
 
-# print(next(counter))
-# print(next(counter))
+print(next(counter))
+print(next(counter))
 
 
 # Generator expression

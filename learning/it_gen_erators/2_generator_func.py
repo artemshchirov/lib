@@ -2,11 +2,11 @@
 # Generators can be created with generator functions
 # Generators can be created with generator expressions
 
-# def my_function(x):
-#     return x
-#
-#
-# print(my_function(4))
+def my_function(x):
+    return x
+
+
+print(my_function(4))
 
 
 def count_up_to(x):

@@ -14,7 +14,7 @@ def create_patterns():
     return result_list
 
 
-# print(create_patterns())
+print(create_patterns())
 
 
 def get_current_pattern():

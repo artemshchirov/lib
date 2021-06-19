@@ -1,5 +1,6 @@
 # Iterate
 
+
 # Iterable objects
 
 number_list = [1, 2, 3, 4, 5]
@@ -9,6 +10,7 @@ for number in number_list:
 
 for letter in 'my string':
     print(letter)
+
 
 # Iterators
 

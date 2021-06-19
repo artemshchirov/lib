@@ -2,18 +2,18 @@
 # If we haven't an error - else fires and except doesn't fire
 # Finally block fires anyway
 
-# while True:
-#     try:
-#         number = int(input('Enter some number '))
-#         print(number / 2)
-#     except:
-#         print('You have to enter a number!')
-#     else:
-#         print('Good job! This is a number')
-#         break
-#     finally:
-#         print('Finally block')
-# print('Code after error handling')
+while True:
+    try:
+        number = int(input('Enter some number '))
+        print(number / 2)
+    except:
+        print('You have to enter a number!')
+    else:
+        print('Good job! This is a number')
+        break
+    finally:
+        print('Finally block')
+print('Code after error handling')
 
 
 def divide(x, y):

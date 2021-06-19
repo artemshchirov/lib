@@ -5,9 +5,9 @@ import dataclasses
 class MyRange:
     start: int
     end: int
-    current: int = 0
 
     def __iter__(self):
+        self.current = self.start
         return self
 
     def __next__(self):

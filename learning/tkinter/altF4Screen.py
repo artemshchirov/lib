@@ -3,13 +3,16 @@
 from tkinter import *
 from random import randint
 
+
 # Что происходит когда курсор мыши оказывается над кнопкой
 def motionMouse(event):
-  btn.place(x=randint(0, w - btn.winfo_reqwidth()), y=randint(0, h))
+    btn.place(x=randint(0, w - btn.winfo_reqwidth()), y=randint(0, h))
+
 
 # Событие при нажатии на копку:
 def pressMouse(event):
-  quit(0)
+    quit(0)
+
 
 # Создаем окно и разворачиваем на весь экран
 root = Tk()

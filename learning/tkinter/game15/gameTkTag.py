@@ -6,16 +6,17 @@
 # Добавить анимацию смены изображений методом в exchangeImage(). Посмотреть про объекты Canvas и библ. puGames
 
 from tkinter import *
-from tkinter import ttk         # Для RadioButton
+from tkinter import ttk  # Для RadioButton
 from tkinter import messagebox  # Для окон-сообщений
 from random import randint
-from winsound import Beep       # Бипер (пищалка), генератор звука
-from time import sleep          # Для пауз
+from winsound import Beep  # Бипер (пищалка), генератор звука
+from time import sleep  # Для пауз
+
 
 def music():
-    '''
+    """
     Imperial March Beep мелодия
-    '''
+    """
     # Beep - метод генерации звука
     # Beep(x - Частота звука (от 37 до 32767 Герц), y - Продолжительность)
     Beep(440, 500)
@@ -36,16 +37,20 @@ def music():
     Beep(349, 350)
     Beep(523, 150)
     Beep(440, 1000)
+
+
 def refreshText():
-    '''
+    """
     Обновляет текст меток статистики
-    '''
+    """
     textSteps['text'] = f'Сделано ходов: {steps[diffCombobox.current()]}'
     textRecord['text'] = f'Рекорд ходов: {record[diffCombobox.current()]}'
+
+
 def saveRecords():
-    '''
+    """
     Сохраняет в файл steps.dat рекорды установленные игроком
-    '''
+    """
     global record
 
     try:
@@ -53,18 +58,20 @@ def saveRecords():
         for i in range(len(steps)):
             # Проверка на "был ли уже записанный рекорд побит?".
             # Сравнение списков
-            if (steps[i] > 0 and steps[i] < record[i]):
+            if steps[i] > 0 and steps[i] < record[i]:
                 record[i] = steps[i]
             f.write(str(record[i]) + '\n')
         f.close()
     except:
         messagebox.showinfo('Ошибка', 'Возникла проблема с файлом при сохранении очков')
         record[i] = steps[i]
+
+
 def getRecordSteps():
-    '''
+    """
     Возвращает список рекордов из save файла
     в переменную record
-    '''
+    """
     # Список заполняется значениями из файла для списка records[]
     m = []
     try:
@@ -77,16 +84,18 @@ def getRecordSteps():
         print('Создаю файл... Рекорды обнулены')
 
     # Список должен быть не меньше уровней сложностей (6). Проверка:
-    if (len(m) != 6):
+    if len(m) != 6:
         for i in range(6):
             m.append(1000 + 500 * i)
 
     return m
+
+
 def seeEnd(event):
-    '''
+    """
     Возвращение спрайтов на поле как было
         до нажатия кнопки "Посмотреть, как..."
-    '''
+    """
     global dataImage
 
     Beep(1082, 50)
@@ -97,11 +106,13 @@ def seeEnd(event):
 
     # Обновление изображений в окне
     updatePictures()
+
+
 def seeStart(event):
-    '''
+    """
     Показывает собранное изображение,
         когда ЛКМ зажата кнопка "Посмотреть, как..."
-    '''
+    """
     global copyData, dataImage
 
     Beep(1632, 50)
@@ -115,27 +126,31 @@ def seeStart(event):
 
     # Обновление изображений
     updatePictures()
+
+
 def isCheckImage():
-    '''
+    """
     Выбор заготовленных изображений для спрайтов
-    '''
+    """
     global imageBackground
 
-    if (image.get() == 0):      # Если в переменной image содержится 0
+    if image.get() == 0:  # Если в переменной image содержится 0
         imageBackground = imageBackground01
         Beep(1350, 50)
-    elif (image.get() == 1):      # Если в переменной image содержится 1
+    elif image.get() == 1:  # Если в переменной image содержится 1
         imageBackground = imageBackground02
         Beep(1450, 50)
-    elif (image.get() == 2):      # Если в переменной image содержится 2
+    elif image.get() == 2:  # Если в переменной image содержится 2
         imageBackground = imageBackground03
         Beep(1550, 50)
 
     updatePictures()
+
+
 def updatePictures():
-    '''
+    """
     Обновление всех изображений в labelImage на основе dataImage
-    '''
+    """
     # Циклом проходим все labelImage[][], устанавливая необходимые изображения
     for i in range(n):
         for j in range(m):
@@ -143,10 +158,12 @@ def updatePictures():
 
     # Обновление экрана
     root.update()
+
+
 def resetPictures():
-    '''
+    """
     Сброс игрового поля в исходное, упорядоченное состояние
-    '''
+    """
     global dataImage, steps, playGame
 
     # Игра началась
@@ -179,11 +196,13 @@ def resetPictures():
 
     # Обновление текста меток статистики
     refreshText()
+
+
 def exchangeImage(x1, y1, x2, y2):
-    '''
+    """
     Обмен мест изображений в математической
         и соответсвенно в графической моделях
-    '''
+    """
     global dataImage, labelImage
 
     # Изменяем математическую модель
@@ -197,23 +216,25 @@ def exchangeImage(x1, y1, x2, y2):
 
     # Пауза между перемещением спрайтов при перемешивании
     numSleep = diffCombobox.current()
-    if (numSleep == 0):
+    if numSleep == 0:
         sleep(0.1)
     else:
-        sleep(numSleep / (10 ** (numSleep) * numSleep))
+        sleep(numSleep / (10 ** numSleep * numSleep))
+
+
 def shufflePictures(x, y):
-    '''
+    """
     На основе сложности запускаем цикл,
         в котором 'играем' наоборот: перемешиваем
         спрайты игрового поля, начиная
         с финальной позиции
     Если выбран уровень сложности "Donate!",
         то просто меняем местами 14 и 15 фишки
-    '''
+    """
     # .current() возвращает номер текущего выбранного значения списка
     # внутри Combobox['values']
 
-    if (0 < diffCombobox.current() < 5):
+    if 0 < diffCombobox.current() < 5:
         # Количество перемешиваний в зависимости от уровня сложности
         count = (1 + diffCombobox.current()) ** 4
         # Запрет направления
@@ -221,7 +242,7 @@ def shufflePictures(x, y):
         # Повторение перемешиваний
         # countBlackImgMoves = 0              # ТЕСТ
         # countSpareShuffles = 0              # ТЕСТ
-        while (count > 0):
+        while count > 0:
             # countBlackImgMoves += 1         # ТЕСТ
             # print(countBlackImgMoves)       # ТЕСТ
             # for l in range(len(dataImage)): # ТЕСТ
@@ -230,10 +251,10 @@ def shufflePictures(x, y):
             # Задаём заведомо истинную комбинацию для while
             direction = noDirection
             # Получаем число, ТОЧНО не повторяющее предыдущее
-            while (direction == noDirection):   # Пока НовоеНаправление == Запрещённому
-                direction = randint(0, 3)       #   Генерируем НовоеНаправление
+            while direction == noDirection:  # Пока НовоеНаправление == Запрещённому
+                direction = randint(0, 3)  # Генерируем НовоеНаправление
             # ВНИЗ
-            if (direction == 0 and x + 1 < n):
+            if direction == 0 and x + 1 < n:
                 # Обмениваем текущее "пустое" поле и спрайт ниже
                 exchangeImage(x, y, x + 1, y)
                 # Увеличиваем x, т.к пустое поле перместилось в новую позицию
@@ -243,19 +264,19 @@ def shufflePictures(x, y):
                 noDirection = 1
                 count -= 1
             # ВВЕРХ
-            elif (direction == 1 and x - 1 >= 0):
+            elif direction == 1 and x - 1 >= 0:
                 exchangeImage(x, y, x - 1, y)
                 x -= 1
                 noDirection = 0
                 count -= 1
             # ВПРАВО
-            elif (direction == 2 and y + 1 < m):
+            elif direction == 2 and y + 1 < m:
                 exchangeImage(x, y, x, y + 1)
                 y += 1
                 noDirection = 3
                 count -= 1
             # ВЛЕВО
-            elif (direction == 3 and y - 1 >= 0):
+            elif direction == 3 and y - 1 >= 0:
                 exchangeImage(x, y, x, y - 1)
                 y -= 1
                 noDirection = 2
@@ -264,7 +285,7 @@ def shufflePictures(x, y):
             #     countSpareShuffles += 1     # ТЕСТ
             # print(countSpareShuffles)   # ТЕСТ
     # Начальные позиции спрайтов на сложности Donate!
-    elif (diffCombobox.current() == 0):
+    elif diffCombobox.current() == 0:
         exchangeImage(n - 1, m - 1, n - 1, m - 2)
         exchangeImage(n - 1, m - 2, n - 1, m - 3)
     # Начальные позиции спрайтов на сложности Impossible
@@ -274,15 +295,17 @@ def shufflePictures(x, y):
     Beep(1300, 50)
 
     resetButton['state'] = NORMAL
+
+
 def startNewRound():
-    '''
+    """
     Сбрасываем состояния элементов интерфейса,
         чтобы их нельзя было нажать или выбрать
     Проигрываем звуковой сигнал
     Находим координаты пустого поля
     Запускаем метод shufflePictures(x, y),
         который перемешивает изображения
-    '''
+    """
     global steps, playGame
     # Игра началась
     playGame = True
@@ -315,7 +338,7 @@ def startNewRound():
     # ========== МОЙ ВАРИАНТ WHILE
     x = 0
     y = 0
-    while (dataImage[x][y] != blackImg):
+    while dataImage[x][y] != blackImg:
         y += 1
         if y >= m:
             x += 1
@@ -328,22 +351,24 @@ def startNewRound():
 
     # Обновление текста меток статистики
     refreshText()
+
+
 def go(x, y):
-    '''
+    """
     Реакция при ЛКМ на спрайт
     Меняет местами пусто поле с изображением,
     если возможно
-    '''
+    """
     global steps, playGame
 
     # print(f'go: {x}, {y}')    # Отображение индекса изображения в dataImage
-    if (x + 1 < n and dataImage[x + 1][y] == blackImg):
+    if x + 1 < n and dataImage[x + 1][y] == blackImg:
         exchangeImage(x, y, x + 1, y)
-    elif (x - 1 >= 0 and dataImage[x - 1][y] == blackImg):
+    elif x - 1 >= 0 and dataImage[x - 1][y] == blackImg:
         exchangeImage(x, y, x - 1, y)
-    elif (y - 1 >= 0 and dataImage[x][y - 1] == blackImg):
+    elif y - 1 >= 0 and dataImage[x][y - 1] == blackImg:
         exchangeImage(x, y, x, y - 1)
-    elif (y + 1 < m and dataImage[x][y + 1] == blackImg):
+    elif y + 1 < m and dataImage[x][y + 1] == blackImg:
         exchangeImage(x, y, x, y + 1)
     else:
         Beep(50, 100)
@@ -352,7 +377,7 @@ def go(x, y):
     Beep(1400, 50)
 
     # Если спрайты были перемещены, то +1 к статистике ходов
-    if (playGame):
+    if playGame:
         steps[diffCombobox.current()] += 1
         # Обновление текста меток статистики
         refreshText()
@@ -361,13 +386,13 @@ def go(x, y):
         for i in range(n):
             for j in range(m):
                 # В dataImage[3][3] должно быть blackImg
-                if (i == n - 1 and j == m - 1):
+                if i == n - 1 and j == m - 1:
                     # Если хоть одно из выражений = False
-                    win = win and dataImage[i][j] == blackImg   # то win = False
-                else:   # иначе сравниваем с dataImage[от 0 до 14]
+                    win = win and dataImage[i][j] == blackImg  # то win = False
+                else:  # иначе сравниваем с dataImage[от 0 до 14]
                     win = win and dataImage[i][j] == i * n + j
 
-        if (win):
+        if win:
             # Установка спрайта картинки вместо пустого поля (для красоты)
             dataImage[n - 1][m - 1] = blackImg - 1
             updatePictures()
@@ -379,6 +404,7 @@ def go(x, y):
             playGame = False
             refreshText()
 
+
 # =============== НАЧАЛО ПРОГРАММЫ
 # Создание окна
 root = Tk()
@@ -388,12 +414,12 @@ root.title('Головоломка для самых умных')
 root.iconbitmap('favicon/favicon.ico')
 
 # Цвета. Код - только шестнадцатеричная запись
-back = '#373737'    # Фон: Черный
-fore = '#AFAFAF'    # Шрифт: Серый
+back = '#373737'  # Фон: Черный
+fore = '#AFAFAF'  # Шрифт: Серый
 
 # Настройка геометрии окна
 WIDTH = 422
-HEIGHT= 730
+HEIGHT = 730
 POS_X = root.winfo_screenwidth() // 2 - WIDTH // 2
 POS_Y = root.winfo_screenheight() // 2 - HEIGHT // 2
 root.geometry(f'{WIDTH}x{HEIGHT}+{POS_X}+{POS_Y}')
@@ -403,8 +429,8 @@ root['bg'] = back
 # Кнопка ПОСМОТРЕТЬ СОБРАННОЕ
 seeButton = Button(root, text='See, how it should be', width=56)
 seeButton.place(x=10, y=620)
-seeButton.bind('<Button-1>', seeStart)        # нажатие ЛКМ по виджету вызывается метод seeStart
-seeButton.bind('<ButtonRelease>', seeEnd)     # отпуск ЛКМ возвращает как было до нажатия виджета
+seeButton.bind('<Button-1>', seeStart)  # нажатие ЛКМ по виджету вызывается метод seeStart
+seeButton.bind('<ButtonRelease>', seeEnd)  # отпуск ЛКМ возвращает как было до нажатия виджета
 
 # Кнопка СТАРТ
 startButton = Button(text='START', width=56)
@@ -459,8 +485,8 @@ radio03.place(x=150, y=588)
 
 # =============== ИЗОБРАЖЕНИЯ
 # Размер поля
-n = 4   # Ширина
-m = 4   # Высота
+n = 4  # Ширина
+m = 4  # Высота
 # Размер "полного" изображения в пикселях
 pictureWidth = 400
 pictureHeight = 532
@@ -476,7 +502,7 @@ fileName = ['img01.png', 'img02.png', 'img03.png', 'img04.png',
             'img13.png', 'img14.png', 'img15.png', 'img16.png', 'black.png']
 
 # Каталоги для изображений
-imageBackground = []    # Активное изображение
+imageBackground = []  # Активное изображение
 imageBackground01 = []  # Киберпанк
 imageBackground02 = []  # Природа
 imageBackground03 = []  # Космос
@@ -518,7 +544,8 @@ for i in range(n):
         labelImage[i][j].place(x=10 + j * widthPic, y=10 + i * heightPic)
 
         # Что произойдёт при нажатии на Label
-        labelImage[i][j].bind('<Button-1>', lambda e, x=i, y=j: go(x, y))   # e чтобы перехватить event (но без обработки)
+        labelImage[i][j].bind('<Button-1>',
+                              lambda e, x=i, y=j: go(x, y))  # e чтобы перехватить event (но без обработки)
         # Устанавливаем изображение
         # ['image'] - отвечает за привязку (установку) изображения
         # (в нашем случае это объект PhotoImage) к Label

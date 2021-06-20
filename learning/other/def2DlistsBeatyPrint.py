@@ -31,7 +31,7 @@ for i in range(n):
     aveOne = 0
     for j in range(m):
         aveOne += mylist[i][j]
-    if (aveOne > ave):
+    if aveOne > ave:
         count += 1
         print(aveOne, ave)
 
@@ -40,9 +40,9 @@ min = mylist[0][0]
 
 for i in range(n):
     for j in range(m):
-        if (mylist[i][j] > max):
+        if mylist[i][j] > max:
             max = mylist[i][j]
-        if (mylist[i][j] < min):
+        if mylist[i][j] < min:
             min = mylist[i][j]
 
 printList2D(mylist)

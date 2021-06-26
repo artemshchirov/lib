@@ -1,6 +1,5 @@
 import sqlite3
 conn = sqlite3.connect("students_db.db")  # connect to db or create new
-
 cursor = conn.cursor()
 
 cursor.execute("CREATE TABLE students (first_name TEXT, last_name TEXT, age INTEGER);")
@@ -31,6 +30,18 @@ for student in students:
 # or
 cursor.executemany(insert_query, students)
 
-conn.commit()
+cursor.execute("SELECT * FROM students WHERE first_name IS 'Aleks';")  # choose all columns and rows
+for row in cursor:
+    print(row)
+print(cursor.fetchone())
+print(cursor.fetchall())
 
+cursor.execute("UPDATE students SET age=18 WHERE first_name='Katty';")
+cursor.execute("DELETE FROM students WHERE last_name='Tomato';")
+
+cursor.execute("SELECT * FROM students;")
+data = cursor.fetchall()
+[print(row) for row in data]
+
+conn.commit()
 conn.close()

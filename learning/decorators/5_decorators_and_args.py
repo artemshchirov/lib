@@ -8,9 +8,7 @@ def check_if_first_arg_is(value):
             if args and args[0] != value:
                 print(f'First argument has to be {value}')
             return func(*args, **kwargs)
-
         return wrapper
-
     return inner_dec
 
 
@@ -38,9 +36,7 @@ def enforce(*types):
             for a, t in zip(args, types):
                 new_args.append(t(a))
             return func(*new_args, **kwargs)
-
         return wrapper
-
     return inner_dec
 
 
@@ -50,8 +46,7 @@ def print_text_n_times(text, n):
         print(text)
 
 
-print_text_n_times('Hi!', 4)
-
+print_text_n_times('Hi!', '4')
 
 # *args = ('Hi!', '3')
 # *types = (str, int)

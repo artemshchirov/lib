@@ -37,7 +37,7 @@ class CoolGameFunctionsTest(unittest.TestCase):
 
     def test_can_fly_batman(self):
         """
-        can_fly() have to return True if name == 'Batman'
+        Test comment: can_fly() have to return True if name == 'Batman'
         """
         self.assertTrue(cool_game.can_fly('Batman'), 'Batman have be able to fly')
 

@@ -16,5 +16,6 @@ response = requests.get(url, headers={'Accept': 'application/json'}, params={
 
 data = response.json()
 print(data['type'])
+print(data['metadata'])
 print(data['features'][0]['properties']['place'])
 print(data['features'][1]['properties']['place'])

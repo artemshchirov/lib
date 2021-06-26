@@ -1,7 +1,8 @@
 import requests
+import myinfo
 
 json_payload = {
-    "text": "Test Task",
+    "text": "Test Task 2",
     "type": "todo",
     "alias": "hab-api-tasks",
     "notes": "This is a test task that was set with the python requests module.",
@@ -9,9 +10,9 @@ json_payload = {
 }
 headers = {
     "Content-Type": "application/json",
-    "x-api-key": "9d6fdd4e-9078-4ee5-bdaf-9bb05490418d",
-    "x-api-user": "a1ff466f-5563-40f4-b17a-c37bb7b6811b",
-    "x-client": "a1ff466f-5563-40f4-b17a-c37bb7b6811b-Testing"
+    "x-api-user": myinfo.habitica_api_user,
+    "x-api-key": myinfo.habitica_api_key,
+    "x-client": myinfo.habitica_api_key + "-Testing"
 }
 response = requests.post("https://habitica.com/api/v3/tasks/user", json=json_payload, headers=headers)
 print(response)

@@ -24,7 +24,7 @@ def divide(x, y):
         print('e:', e)
     except TypeError as err:
         print('x and y must be numbers')
-        print('e:', err)
+        print('err:', err)
     else:
         print('x was divided by y')
     finally:

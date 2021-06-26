@@ -1,0 +1,51 @@
+--CREATE TABLE students (
+--
+--    first_name TEXT,
+--    last_name TEXT,
+--    age INTEGER
+--
+--);
+--CREATE TABLE employees (
+--
+--    first_name TEXT,
+--    last_name TEXT,
+--    age INTEGER
+--
+--);
+
+-- CRUD - Create, Read, Update, Delete
+
+-- Create
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Jack", "White", 18);  -- add to table
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Jane", "Black", 38);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Kevin", "Rose", 81);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Maria", "Orange", 29);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Jack", "White", 18);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Jane", "Black", 18);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Kevin", "Rose", 81);
+--INSERT INTO employees (first_name, last_name, age) VALUES ("Maria", "Orange", 29);
+
+-- Read
+--SELECT * FROM employees;  -- show all table
+--SELECT first_name FROM employees;  -- show one column
+--SELECT first_name, age FROM employees;  -- show several columns
+--SELECT first_name, age FROM employees WHERE first_name IS "Jack";  -- show with filter parameters
+--SELECT first_name, age FROM employees WHERE first_name = "Jack";
+--SELECT first_name, age FROM employees WHERE age IS 18;
+--SELECT last_name, age FROM employees WHERE last_name IS NOT "Rose";
+--SELECT last_name, age FROM employees WHERE last_name IS NOT "Rose" AND age IS NOT 18;
+--SELECT last_name, age FROM employees WHERE age > 30;
+--SELECT first_name, age FROM employees WHERE first_name LIKE "%a";
+--SELECT * FROM employees WHERE first_name LIKE "%in" OR last_name LIKE "%ge";
+--SELECT * FROM employees WHERE first_name LIKE "%a%";
+
+-- Update
+--UPDATE employees SET first_name="Mariaa" WHERE first_name="Maria";
+--UPDATE employees SET age=20;
+--UPDATE employees SET first_name="Maria", age=19 WHERE first_name="Mariaa";
+--UPDATE employees SET age=23 WHERE first_name="Jack" OR last_name="Rose";
+
+-- Delete
+--DELETE FROM employees WHERE age=20;
+--DELETE FROM employees WHERE age=18 AND last_name="Rose";
+--DELETE FROM employees; -- delete all table info

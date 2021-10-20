@@ -1,0 +1,20 @@
+# Open aliases file
+alias a='gedit ~/.bash_aliases'
+# Activate new aliases
+alias arun='. ~/.bashrc'
+
+#jupyter
+alias jw='workon jupyterLabEnv'
+alias jcd='cd Programming/jupyter'
+alias jl='jupyter-lab'
+alias jn='jupyter-notebook'
+alias jns='python manage.py shell_plus --notebook'
+
+#django
+alias ma='python manage.py makemigrations'
+alias mi='python manage.py migrate'
+alias st='python manage.py collectstatic'
+alias runs='python manage.py runserver'
+
+# linux commands
+alias up='python3 Programming/scripts/linux_update.py'

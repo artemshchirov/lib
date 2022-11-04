@@ -1,0 +1,2 @@
+# Create env with python 3.9+
+mkvirtualenv -p /usr/local/bin/python3.9 MainEnvName  

@@ -1,0 +1,535 @@
+# Звук
+import random
+from random import randint
+from tkinter import *
+from tkinter import ttk         # Для RadioButton
+from tkinter import messagebox  # Для окон-сообщений
+import tkinter as tk
+
+from time import sleep          # Для пауз
+
+def play():
+    '''
+    Кнопка | >
+    '''
+    global playGame, pauseMoves
+    # print('| >')
+    playButton['text'] = '| |'
+    playButton['command'] = pause
+    startButton['state'] = DISABLED
+    resetButton['state'] = NORMAL
+    leftButton['state'] = DISABLED
+    playButton['state'] = NORMAL
+    rightButton['state'] = DISABLED
+    # xCombobox['state'] = DISABLED
+    # oCombobox['state'] = DISABLED
+    # endCombobox['state'] = DISABLED
+
+    playGame = True
+    pauseMoves = False
+
+    # Для определения какой бот играет с каким ботом
+    # combo = gamers[xCombobox.current()][oCombobox.current()]
+
+    print('START figura: ', figura)
+    count = 0
+    while (playGame):
+        moveAI()
+        count += 1
+    print('циклов moveAI(): ', count)
+def pause():
+    '''
+    Кнопка | |
+    '''
+    global playGame, pauseMoves
+
+    # print('| |')
+
+    playGame = False
+
+    if (not pauseMoves):
+        pauseMoves = True
+    elif (pauseMoves):
+        pauseMoves = False
+
+    playButton['text'] = '| >'
+    leftButton['state'] = NORMAL
+    rightButton['state'] = NORMAL
+    playButton['command'] = play
+def leftButton():
+
+    rightButton['state'] = NORMAL
+    playButton['state'] = NORMAL
+def comboStyle():
+    combostyle = ttk.Style()
+    combostyle.theme_create('combostyle', parent='alt',
+                             settings = {'TCombobox':
+                                         {'configure':
+                                          {'selectbackground': 'white',
+                                           'selectforeground': 'black',
+                                           'fieldbackground': 'white',
+                                           'background': 'white'
+                                           }}}
+                             )
+    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+    # ('combostyle', 'winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
+    combostyle.theme_use('combostyle')
+def reset():
+    '''
+    Сбрасывает поле в cостояние после запуска программы
+    '''
+    global  playGame, wins
+
+    playGame = False
+
+    startButton['state'] = NORMAL
+    resetButton['state'] = DISABLED
+    leftButton['state'] = DISABLED
+    playButton['state'] = DISABLED
+    rightButton['state'] = DISABLED
+    xCombobox['state'] = 'readonly'
+    oCombobox['state'] = 'readonly'
+    endCombobox['state'] = 'readonly'
+    startButton['text'] = 'Start'
+    playButton['text'] = '| >'
+    playButton['command'] = pause
+
+    for i in range(n):
+        for j in range(m):
+            dataImage[i][j] = 0
+
+    for i in range(len(wins)):
+        wins[i] = 0
+
+    for i in range(len(labelsTop)):
+        labelsTop[i]['image'] = labelsTopImages[5]
+
+    refreshText()
+    updatePictures()
+def refreshText():
+    '''
+    Обновляет текст меток статистики
+    '''
+    if (wins[1] == 0 and wins[2] == 0 and wins[0] == 0):
+        textWinX['text'] = f'Win:  0 %'
+        textWinO['text'] = f'Win:  0 %'
+        textDraw['text'] = f'Tie:  0 %'
+        textTimesX['text'] = f'({wins[1]})'
+        textTimesO['text'] = f'({wins[2]})'
+        textTimesT['text'] = f'({wins[0]})'
+    else:
+        textWinX['text'] = f'Win: {round((wins[1]/sum(wins) * 100), 2)}% '
+        textWinO['text'] = f'Win: {round((wins[2]/sum(wins) * 100), 2)}% '
+        textDraw['text'] = f'Tie: {round((wins[0]/sum(wins) * 100), 2)}% '
+        textTimesX['text'] = f'({wins[1]})'
+        textTimesO['text'] = f'({wins[2]})'
+        textTimesT['text'] = f'({wins[0]})'
+def updatePictures():
+    '''
+    Обновление всех изображений в labelImage на основе dataImage
+    '''
+    # Циклом проходим все labelImage[][], устанавливая необходимые изображения
+    for i in range(n):
+        for j in range(m):
+            labelImage[i][j]['image'] = imageFieldXO[dataImage[i][j]]
+
+    # Обновление экрана
+    root.update()
+def isWinCheck():
+    '''
+    Проверка на победу. 1 - Х, 2 - О, 0 - Ничья
+    '''
+    if (dataImage[0] == [1, 1, 1] or dataImage[1] == [1, 1, 1] or dataImage[2] == [1, 1, 1]  \
+    or (dataImage[0][0] == 1 and dataImage[1][0] == 1 and dataImage[2][0] == 1)              \
+    or (dataImage[0][1] == 1 and dataImage[1][1] == 1 and dataImage[2][1] == 1)              \
+    or (dataImage[0][2] == 1 and dataImage[1][2] == 1 and dataImage[2][2] == 1)              \
+    or (dataImage[0][0] == 1 and dataImage[1][1] == 1 and dataImage[2][2] == 1)              \
+    or (dataImage[0][2] == 1 and dataImage[1][1] == 1 and dataImage[2][0] == 1)):
+        return 1
+    elif (dataImage[0] == [2, 2, 2] or dataImage[1] == [2, 2, 2] or dataImage[2] == [2, 2, 2]  \
+    or (dataImage[0][0] == 2 and dataImage[1][0] == 2 and dataImage[2][0] == 2)                \
+    or (dataImage[0][1] == 2 and dataImage[1][1] == 2 and dataImage[2][1] == 2)                \
+    or (dataImage[0][2] == 2 and dataImage[1][2] == 2 and dataImage[2][2] == 2)                \
+    or (dataImage[0][0] == 2 and dataImage[1][1] == 2 and dataImage[2][2] == 2)                \
+    or (dataImage[0][2] == 2 and dataImage[1][1] == 2 and dataImage[2][0] == 2)):
+        return 2
+    elif (0 not in dataImage[0] and 0 not in dataImage[1] and 0 not in dataImage[2] ):
+        return 0
+def startNewGame():
+    '''
+    Инициализация новой игры (цикла раундов)
+    '''
+    global playGame, figura, wins, pauseMoves
+
+    startButton['state'] = DISABLED
+    resetButton['state'] = NORMAL
+    leftButton['state'] = DISABLED
+    playButton['state'] = DISABLED
+    rightButton['state'] = DISABLED
+    xCombobox['state'] = DISABLED
+    oCombobox['state'] = DISABLED
+    endCombobox['state'] = DISABLED
+
+    for i in range(len(wins)):
+        wins[i] = 0
+
+    playGame = True
+    pauseMoves = False
+
+    # 1 - 1й ход X, 2 - 1й ход O
+    figura = randint(1, 2)
+    print('1й ход. X-1, O-2: ', figura)
+
+    startNewRound()
+def startNewRound():
+    '''
+    Инициализация нового раунда
+    '''
+    global playGame, figura, moveHuman
+
+    # Счетчик игр на кнопке Start
+    startButton['text'] = f'Games: {sum(wins)}'
+
+    # Отключение паузы (если есть)
+    pauseMoves = False
+
+    # Установка default математической модели
+    for i in range(n):
+        for j in range(m):
+            dataImage[i][j] = 0
+
+    # Значения Comboboxes для определения кто с кем играет
+    combo = gamers[xCombobox.current()][oCombobox.current()]
+    # Если в игре Player 1,2 vs AI
+    if (combo == 1 or combo == 3):
+        # Первый ход. 0 - Робот, 1 - Человек
+        firstMove = randint(0, 1)
+        if (firstMove == 0):
+            moveHuman = False
+            # Если игрок 1й (Тор) - человек, то 1й ход O
+            if (xCombobox.current() == 0):
+                figura = 2
+                print(figura)
+            # Если игрок 2й (К.А.) - человек, то 1й ход X
+            elif (oCombobox.current() == 0):
+                figura = 1
+        else:
+            moveHuman = True
+            # Если игрок 1й (Тор) - человек, то 1й ход X
+            if (xCombobox.current() == 0):
+                figura = 1
+            # Если игрок 2й (К.А.) - человек, то 1й ход O
+            elif (oCombobox.current() == 0):
+                figura = 2
+    # Если игра AI vs AI
+    elif (combo == 4 and playGame):
+        playGame = True
+        play()
+
+    # Установка img соотвественно того, кто 1й ходит
+    if (figura == 1):   # X (Тор)
+        labelsTop[0]['image'] = labelsTopImages[3]
+        labelsTop[1]['image'] = labelsTopImages[4]
+        labelsTop[2]['image'] = labelsTopImages[2]
+    elif (figura == 2): # O (К.А)
+        labelsTop[0]['image'] = labelsTopImages[0]
+        labelsTop[1]['image'] = labelsTopImages[4]
+        labelsTop[2]['image'] = labelsTopImages[3]
+
+    updatePictures()
+def go(x, y):
+    '''
+    Обрабатывание клика на поле игры
+    '''
+    global moveHuman
+
+    if (playGame):
+        combo = gamers[xCombobox.current()][oCombobox.current()]
+        # Player 1 vs Player 2
+        if (combo == 0):
+            if (dataImage[x][y] == 0):
+                move(x, y, figura)
+        # Player 1,2 vs Random AI
+        elif (combo == 1 or combo == 3):
+                if (moveHuman and dataImage[x][y] == 0):
+                    moveHuman = False
+                    move(x, y, figura)
+                if (not moveHuman):
+                    moveHuman = True
+                    moveAI()
+    else:
+        return 0
+def move(x, y, move):
+    '''
+    Ход, проверка хода и победы, инициализация последствий
+    '''
+    global figura, playGame, wins, win, pauseMoves, firstMove
+
+    if (dataImage[x][y] == 0):
+        dataImage[x][y] = move
+        labelImage[x][y]['image'] = imageFieldXO[dataImage[x][y]]
+        labelsTop[1]['image'] = labelsTopImages[4]
+
+        if (figura == 1):
+            labelsTop[0]['image'] = labelsTopImages[0]
+            labelsTop[2]['image'] = labelsTopImages[3]
+            figura = 2
+        elif (figura == 2):
+            labelsTop[0]['image'] = labelsTopImages[3]
+            labelsTop[2]['image'] = labelsTopImages[2]
+            figura = 1
+
+        win = isWinCheck()
+        # X win check
+        if (win == 1):
+            wins[1] += 1     # +1 to win-statistics
+            labelsTop[0]['image'] = labelsTopImages[3]
+            labelsTop[1]['image'] = labelsTopImages[1]
+            labelsTop[2]['image'] = labelsTopImages[2]
+        # O win check
+        elif (win == 2):
+            wins[2] += 1     # +1 to win-statistics
+            labelsTop[0]['image'] = labelsTopImages[0]
+            labelsTop[1]['image'] = labelsTopImages[1]
+            labelsTop[2]['image'] = labelsTopImages[3]
+        # Tie check
+        elif (win == 0):
+            wins[0] += 1    # +1 to win-statistics
+            labelsTop[0]['image'] = labelsTopImages[0]
+            labelsTop[1]['image'] = labelsTopImages[1]
+            labelsTop[2]['image'] = labelsTopImages[2]
+
+    refreshText()
+    updatePictures()
+
+    if (endCombobox.current() == 0):
+        if (wins[1] >= 2 or wins[2] >= 2):
+            playGame = False
+            startButton['text'] = 'Start'
+            playButton['text'] = '| >'
+            startButton['state'] = NORMAL
+            leftButton['state'] = NORMAL
+            playButton['state'] = DISABLED
+            rightButton['state'] = DISABLED
+            print('return  1')
+            # Надо для AI VS AI 2 wins
+            combo = gamers[xCombobox.current()][oCombobox.current()]
+            if (combo == 4 or combo == 1 or combo == 3):
+                pauseMoves = True
+                return 0
+            else:
+                pauseMoves = True
+                print('return  0')
+                return 0
+
+    # if (not pauseMoves):
+    if (win == 0 or win == 1 or win == 2):
+
+        print('Было. firstMove: ', firstMove, 'figura: ', figura)
+        firstMove = randint(0, 1)
+        if (firstMove == 0):
+            figura = 1
+        elif (firstMove == 1):
+            figura = 2
+        print('Стало. firstMove: ', firstMove, 'figura: ', figura)
+
+        playGame = False
+        # sleep(0.5)    # Пауза между раундоми
+        startNewRound()
+        playGame = True
+def moveAI():
+    '''
+    Бот делающий ходы случайным образом
+    '''
+    global playGame, aiX, aiY
+
+    if (endCombobox.current() == 0):
+        if (wins[1] >= 2 or wins[2] >= 2):
+            return 0
+
+    if (pauseMoves):
+        playGame = True
+
+    if (playGame):
+        playGame = False
+
+        # Кто против кого играет (зависит от значений Comboboxes)
+        combo = gamers[xCombobox.current()][oCombobox.current()]
+
+        # Пауза перед ходом AI в зависимости от типа игры
+        if (combo == 1 or combo == 2 or combo == 3 or combo == 6):
+            sleep(random.uniform(0, 1))  # Время паузы бота перед ходом против игрока
+        else:
+            sleep(0.5)  # Время паузы бота перед ходом против бота
+
+
+        if (combo == 2 or combo == 6):
+
+        # if (combo == 1 or combo == 3 or combo == 4 or combo == 5 or combo == 7):
+        #     print('Random AI move')
+        #     aiX = randint(0, 2)
+        #     aiY = randint(0, 2)
+        #     while (dataImage[aiX][aiY] != 0):
+        #         aiX = randint(0, 2)
+        #         aiY = randint(0, 2)
+
+            move(aiX, aiY, figura)
+
+        if (not pauseMoves):
+            playGame = True
+        else:
+            playGame = False
+
+# =============== START
+root = Tk()
+root.resizable(False, False)
+root.title('Tic Tac Toe')
+# root.iconbitmap('favicon/favicon.ico')
+
+WIDTH = 473
+HEIGHT= 680
+POS_X = root.winfo_screenwidth() // 2 - WIDTH // 2
+POS_Y = root.winfo_screenheight() // 2 - HEIGHT // 2
+root.geometry(f'{WIDTH}x{HEIGHT}+{POS_X}+{POS_Y}')
+
+# Colors
+back = '#6f4a8e'
+butt = '#FFFFFF'
+fore = '#000000'
+
+# main background color
+root['bg'] = back
+
+# Map#.png
+imageMap = PhotoImage(file='map.png')
+map = Label(root, image=imageMap, bg=back)
+map.place(x = 7, y = 108)
+
+# Comboboxes
+playersX = [' Player 1', ' AI Random', ' AI Smart']
+playersO = [' Player 2', ' AI Random', ' AI Smart']
+typeGames = [' 2 wins', ' Endless']
+xCombobox = ttk.Combobox(root, width=14, values=playersX, state='readonly')
+oCombobox = ttk.Combobox(root, width=14, values=playersO, state='readonly')
+endCombobox = ttk.Combobox(root, width=14, values=typeGames, state='readonly')
+xCombobox.place(x=10, y=584)
+oCombobox.place(x=10, y=614)
+endCombobox.place(x=10, y=644)
+xCombobox.current(0)
+oCombobox.current(1)
+endCombobox.current(1)
+
+# Buttons
+startButton = Button(text='Start', width=15, bg=butt)
+resetButton = Button(text='Reset', width=15, bg=butt)
+leftButton = Button(text='<-', width=4, bg=butt)
+playButton = Button(text='| >', width=5, bg=butt)
+rightButton = Button(text='->', width=4, bg=butt)
+startButton.place(x=178, y=577)
+resetButton.place(x=178, y=610)
+playButton.place(x=213, y=643)
+leftButton.place(x=174, y=643)
+rightButton.place(x=259, y=643)
+startButton['command'] = startNewGame
+resetButton['command'] = reset
+leftButton['command'] = leftButton
+playButton['command'] = pause
+rightButton['command'] = moveAI
+resetButton['state'] = DISABLED
+leftButton['state'] = DISABLED
+playButton['state'] = DISABLED
+rightButton['state'] = DISABLED
+
+# Icons shield, hammer
+imageChooseX = PhotoImage(file='images/chooseX.png')
+imageChooseO = PhotoImage(file='images/chooseO.png')
+imageChooseX_0 = PhotoImage(file='images/chooseX.png')
+imageChooseO_O = PhotoImage(file='images/chooseO.png')
+chooseX = Label(root, image=imageChooseX, bg=back)
+chooseO = Label(root, image=imageChooseO, bg=back)
+chooseX_0 = Label(root, image=imageChooseX, bg=back)
+chooseO_0 = Label(root, image=imageChooseO, bg=back)
+chooseX.place(x = 296, y = 582)
+chooseO.place(x = 299, y = 610)
+chooseX_0.place(x = 138, y = 582)
+chooseO_0.place(x = 141, y = 610)
+
+# Statistics % labels
+textWinX = Label(root, bg=back, fg=butt)
+textWinO = Label(root, bg=back, fg=butt)
+textDraw = Label(root, bg=back, fg=butt)
+textWinX.place(x=338, y=582)
+textWinO.place(x=338, y=612)
+textDraw.place(x=343, y=642)
+# Statistics № labels
+textTimesX = Label(root, bg=back, fg=butt)
+textTimesO = Label(root, bg=back, fg=butt)
+textTimesT = Label(root, bg=back, fg=butt)
+textTimesX.place(x=412, y=582)
+textTimesO.place(x=412, y=612)
+textTimesT.place(x=412, y=642)
+
+# =============== ИЗОБРАЖЕНИЯ
+n = 3   # Ширина поля
+m = 3   # Высота поля
+# Размер "полного" изображения в пикселях
+pictureWidth = 450
+pictureHeight = 450
+# Ширина и высота одного спрайта в пикселях
+widthPic = pictureWidth / n
+heightPic = pictureHeight / n
+
+# Список хранящий изображения для labelsTop
+labelsTopImages = []
+labelsTopImages.append(PhotoImage(file='endgame/captain.png'))
+labelsTopImages.append(PhotoImage(file='endgame/win.png'))
+labelsTopImages.append(PhotoImage(file='endgame/thor.png'))
+labelsTopImages.append(PhotoImage(file='endgame/field2.png'))
+labelsTopImages.append(PhotoImage(file='endgame/field2.png'))  # letsgo
+labelsTopImages.append(PhotoImage(file='endgame/start.png'))
+# Список с LabelTop и установка их
+labelsTop = []
+for i in range(3):
+    labelsTop.append(Label(root, bg=back))
+    labelsTop[i].place(x=53 + i * (widthPic - 10), y=5)
+    labelsTop[i]['image'] = labelsTopImages[5]
+
+# Список с изображениями пустого поля, X и O
+imageFieldXO = []
+imageFieldXO.append(PhotoImage(file='fieldXO/field.png'))
+imageFieldXO.append(PhotoImage(file='fieldXO/imageX.png'))
+imageFieldXO.append(PhotoImage(file='fieldXO/imageO.png'))
+# Создание математической и графической модели, вставка картинок
+labelImage = []
+dataImage = []
+for i in range(n):
+    labelImage.append([])
+    dataImage.append([])
+    for j in range(m):
+        dataImage[i].append(0)
+        labelImage[i].append(Label(root, bg=back))
+        labelImage[i][j].place(x=20 + j * widthPic, y=123 + i * heightPic)
+        labelImage[i][j].bind('<Button-1>', lambda e, x=i, y=j: go(x, y))
+        labelImage[i][j]['image'] = imageFieldXO[dataImage[i][j]]
+
+# Последствия выбора в Comboboxes при Start
+gamers = []
+for i in range(len(playersX)):
+    gamers.append([])
+    for j in range(len(playersO)):
+        gamers[i].append(i * len(playersX) + j)
+print(gamers)
+playGame = True
+moveHuman = True
+pauseMoves = False
+firstMove = randint(0, 1)
+figura = randint(1, 2)
+# Statistics
+wins = [0, 0, 0]
+
+refreshText()
+
+# Style Comboboxes
+comboStyle()
+# =============== END
+root.mainloop()
